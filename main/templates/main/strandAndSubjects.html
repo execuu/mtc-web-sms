@@ -1,0 +1,65 @@
+{% extends "main/index.html" %}
+
+{% block title %}<title>Strands and Subjects</title>{% endblock %}
+
+{% block index %}
+{% include 'main/navbar.html' %}
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-6">
+      <h3 class="m-4 d-inline-block">Strands and Subjects</h3>
+      </div>
+      <div class="col-6 text-end">
+        <button type="button" class="btn btn-primary m-4" id="myButton">Button</button>
+      </div>      
+      <div class="col-12">
+        
+          <div class="card border-danger ms-4 me-4 mb-4">
+            <div class="card-header">
+              <i class="fa-solid fa-user-graduate fa-lg"></i> Strands
+            </div>
+            <div class="card-body">
+              <p class="card-text">
+                <div class="accordion" id="accordionExample">
+                    {% for strand in strands %}
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                            {{ strand.name }}
+                        </button>
+                      </h2>
+                      <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          <strong>Subjects:</strong>
+                          <ul>
+                            {% for subject in strand.subjects.all %}
+                            <li>{{ subject.name }}</li>
+                            <ul>
+                              {% for coach in subject.coaches.all %}
+                              <li>Coach: {{ coach.firstName }} {{ coach.lastName }}</li>
+                              {% endfor %}
+                              {% for student in subject.students.all %}
+                              <li>Student: {{ student.firstName }} {{ student.lastName }}</li>
+                              {% endfor %}
+                            </ul>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+              </p>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+{% endblock %}

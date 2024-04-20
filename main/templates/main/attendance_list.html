@@ -1,0 +1,52 @@
+{% extends "main/index.html" %}
+{% load static %}
+
+{% block index %}
+{% include 'main/navbar.html' %}
+<style>
+    h1 {
+        margin-top: 80px;
+    }
+    table{
+        margin-top:50px
+    }
+</style>
+<div class="main-container">
+    <h1 class="text-center">{{att_list.name}} Attendance List</h1>
+    <h2 class="text-center">Coach: John Martinez</h2>
+    <h2 class="text-center">Date: April 20, 2024</h2>
+    {% if students %}
+    <div class="table-responsive">
+    <table class="table table-hover text-center">
+        <thead>
+            <tr>
+                <th style="color:#7952B3" scope="col">Student ID:</th>
+                <th style="color:#7952B3" scope="col">LRN:</th>
+                <th style="color:#7952B3" scope="col">First Name:</th>
+                <th style="color:#7952B3" scope="col">Last Name:</th>
+                <th style="color:#7952B3" scope="col">Section:</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+                <tr>
+                 <td>{{ student.studentNumber }}</td>
+                  <td>{{ student.LRN }}</td>
+                  <td>{{ student.firstName }}</td>
+                  <td>{{ student.lastName }}</td>
+                  <td>{{ student.section }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <br>
+    <br>
+    <div style="width:70%;margin:auto;font-size:18px" class="alert alert-primary text-center" role="alert">
+        No One Yet!
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

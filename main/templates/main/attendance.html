@@ -1,0 +1,14 @@
+{% extends "main/index.html" %}
+{% block index %}
+{% include 'main/navbar.html' %}
+<div class="container">
+    <h1>Attendance QR Codes</h1>
+    <ul>
+        {% for qr_code in attendance_qr_codes %}
+        <li>
+            <img src="{{ qr_code.qr_code.url }}" alt="QR Code for {{ qr_code.date }}">
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

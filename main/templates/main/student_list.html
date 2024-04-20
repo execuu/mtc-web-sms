@@ -1,0 +1,244 @@
+{% extends 'main/index.html' %}
+{% block index %}
+{% include 'main/navbar.html' %}
+{% if messages %}
+        <div class="alert alert-success text-center" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+{% endif %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <h3 class="m-4 d-inline-block">All Students</h3>
+    </div>
+    <div class="col-6 text-end">
+      <button type="button" class="btn btn-primary m-4" id="addStudentButton">Add Student</button>
+    </div>    
+    <div class="col-12">
+      {% if students %}
+      <div class="card border-danger ms-4 me-4 mb-4">
+        <div class="card-header">
+          <i class="fa-solid fa-user-graduate fa-lg"></i> Student Records
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Student Number</th>
+                    <th scope="col">LRN</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Strand</th>
+                    <th scope="col">Grade Level</th>
+                    <th scope="col">Section</th>
+                    <th scope="col">Picture</th>
+                    <th scope="col">School Yr.</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for student in students %}
+                    <tr>
+                      <td>{{ student.studentNumber }}</td>
+                      <td>{{ student.LRN }}</td>
+                      <td>{{ student.firstName }}</td>
+                      <td>{{ student.lastName }}</td>
+                      <td>{{ student.email }}</td>
+                      <td>{{ student.addrs }}</td>
+                      <td>{{ student.strand }}</td>
+                      <td>{{ student.gradeLevel }}</td>
+                      <td>{{ student.section }}</td>
+                      <td>
+                        {% if student.picture %}
+                          <img src="{{ student.picture.url }}" alt="{{ student.firstName }}'s Picture" style="max-width: 100px; max-height: 100px;" class="img-fluid zoomable-image" data-bs-toggle="modal" data-bs-target="#imageModal{{ student.id }}">
+                        {% else %}
+                          No picture available.
+                        {% endif %}
+                        {% for student in students %}
+                        <div class="modal fade" id="imageModal{{ student.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ student.id }}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-body">
+                                    {% if student.picture %}
+                                      <img src="{{ student.picture.url }}" alt="{{ student.firstName }}'s Picture" class="img-fluid mx-auto d-block" style="max-width: 90vw; max-height: 90vh;">
+                                    {% else %}
+                                      No picture available
+                                    {% endif %}
+                              </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+                      <td>{{ student.school_year }}</td>
+                      <td>
+                        <button type="button" class="btn btn-success me-1" href="{% url 'view_student' student.id %}" data-bs-toggle="modal" data-bs-target="#myModal{{student.id}}">
+                          <i class="fa-solid fa-circle-info fa-lg"></i>
+                        </button>
+
+                        <!-- Modal - View Student -->
+                        <div class="modal" id="myModal{{student.id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">
+                                  Student: {{ student.firstName }} {{ student.lastName }}
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true"></span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <ul class="list-unstyled">
+                                  <li>Student ID Number: <strong>{{ student.studentNumber }}</strong></li>
+                                  <li>LRN: <strong>{{ student.LRN }}</strong></li>
+                                  <li>First Name: <strong>{{ student.firstName }}</strong></li>
+                                  <li>Last Name: <strong>{{ student.lastName }}</strong></li>
+                                  <li>Email: <strong>{{ student.email }}</strong></li>
+                                  <li>Address: <strong>{{ student.addrs }}</strong></li>
+                                  <li>Academic Strand: <strong>{{ student.strand }}</strong></li>
+                                  <li>Grade Level: <strong>{{ student.gradeLevel }}</strong></li>
+                                  <li>Section: <strong>{{ student.section }}</strong></li>
+                                  <li>School Year: <strong>{{ student.school_year }}</strong></li>
+                                </ul>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- <a class="btn btn-warning me-1" href="{% url 'edit_student' student.id %}">
+                          <i class="fa-solid fa-pen-to-square fa-lg"></i> 
+                        </a> -->
+
+                        
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-warning me-1 editStudentButton" data-bs-toggle="modal" data-bs-target="#edit{{student.id}}" data-student-id="{{ student.id }}">
+                          <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </button>
+
+                        <div class="modal fade" role="dialog" id="edit{{student.id}}" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                               <h5 class="modal-title" id="editStudentModalLabel">Update Student</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <!-- Form content will be loaded here -->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      
+                                                                             
+                        <script>
+                          document.addEventListener('DOMContentLoaded', function() {
+                            const editStudentButtons = document.querySelectorAll('.editStudentButton');
+                            editStudentButtons.forEach(button => {
+                              button.addEventListener('click', function() {
+                                  const studentId = button.getAttribute('data-student-id');
+                                  fetch(`/edit_student/${studentId}/`)
+                                      .then(response => response.json())
+                                      .then(data => {
+                                          const modal = document.getElementById(`edit${studentId}`);
+                                          modal.querySelector('.modal-body').innerHTML = data.html_form;
+                                          bootstrap.Modal(modal).show();
+                                      });
+                              });
+                            });
+                          });
+                          
+                        </script>
+                      
+
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{student.id}}">
+                          <i class="fa-solid fa-trash-can fa-lg"></i>
+                        </button>
+
+                        <!-- Modal - Delete Student-->
+                        <div class="modal fade" id="delete{{student.id}}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">
+                                  Student: {{ student.firstName }} {{ student.lastName }}
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true"></span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <p>Are you sure you want to delete this student?</p>
+                              </div>
+                              <div class="modal-footer">
+                                <form action="{% url 'delete_student' student.id %}" method="POST">
+                                  {% csrf_token %}
+                                  <input type="submit" class="btn btn-primary" value="Delete">
+                                </form>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  
+                </tbody>
+              </table>
+            </div>
+          </p>
+        </div>
+      </div>
+      {% else %}
+      <h5 class="alert alert-primary ms-4 me-4">No Student Records</h5>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg"> <!-- Add 'modal-lg' class here -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStudentModalLabel">Add a student</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="addStudentModalBody">
+        <!-- Form content will be loaded here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const addStudentModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+
+    document.getElementById('addStudentButton').addEventListener('click', function() {
+      fetch("{% url 'add_student' %}")
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('addStudentModalBody').innerHTML = html;
+          addStudentModal.show();
+        });
+    });
+  });
+
+</script>
+
+
+
+{% endblock %}

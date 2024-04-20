@@ -1,0 +1,52 @@
+{% extends 'main/index.html' %}
+{% load static %}
+
+{% block title %}<title>MTC SMS | LOGIN</title>{% endblock %}
+
+{% block index %}
+<div class="container-fluid d-flex justify-content-center align-items-center" style="height: 80vh;"> 
+    
+
+    <div class="row justify-content-center">   
+        <div class="mt-6 text-center">
+            <img width="150" height="150" src="{% static 'img/logo.ico' %}"></img>
+            <h1>Mother Theresa Colegio de Iriga Inc. SMS</h1>
+        </div> 
+        <div class="col-md-20 mt-4">
+            <form method="POST">
+                <div class="card border-secondary mb-4">
+                    <div class="card-header"><h3>Login</h3></div>
+                    <div class="card-body">
+                        {% if form.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                Username or password is incorrect. Please try again.
+                            </div>
+                            <div class="has-danger">
+                                <label class="form-label mt-2" for="id_username">Email Address</label>
+                                <input type="email" name="username" value="" class="form-control is-invalid" id="id_username" aria-describedby="emailHelp" placeholder="Enter email">
+                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            </div>
+                            <div class="has-danger">
+                                <label class="form-label mt-2" for="id_password">Password</label>
+                                <input type="password" name="password" value="" class="form-control is-invalid" id="id_password" placeholder="Password" autocomplete="off">
+                            </div>
+                        {% else %}
+                        <div>
+                            <label for="id_username" class="form-label mt-2">Email address</label>
+                            <input type="email" name="username" class="form-control" id="id_username" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </div>
+                        <div>
+                            <label for="id_password" class="form-label mt-2">Password</label>
+                            <input type="password" name="password" class="form-control" id="id_password" placeholder="Password" autocomplete="off">
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Log In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
